@@ -1,0 +1,20 @@
+<ul class="nav nav-stacked nav-pills">
+
+{neq name="$Think.session.user['role']" value="用户"}
+	<li><a href="todo.html">用车审批</a></li>
+	<li><a href="done.html">已审批</a></li>
+{/neq}
+{eq name ="$Think.session.user['role']" value="车辆调度"}
+<li><a href="tabulation.html">报表统计</a></li>
+<li><a href="settingUser.html">人员管理</a></li>
+<li><a href="settingDriver.html">司机车辆管理</a></li>
+<li><a href="systemsetting.html">系统设置</a></li>
+{/eq}
+	<li><a href="browser.html">我的用车</a></li>
+	<li><a href="apply.html">申请用车</a></li>
+	<li><a href="driverRank.html">用车评价</a></li>
+	<li><a href="setting.html">个人资料</a></li>
+	<li><a href="stars.html">明星司机</a></li>
+
+
+</ul>

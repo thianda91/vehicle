@@ -1,0 +1,382 @@
+{extend name="vehicle@common/base" /} {block name="leftmenu"}{include
+file="common/leftMenu" /} {/block}{block name="main"}
+<style>
+button {
+	margin-left: 20px;
+}
+
+#permit1 span {
+	width: 300px;
+}
+
+#appRank {
+	width: 120px;
+}
+</style>
+<div class="htmltitle">
+	<h2>
+		详细信息<a class="btn btn-default" href="javascript:history.go(-1);">返回</a>
+	</h2>
+</div>
+
+<div class="table-responsive" style="width: 800px;">
+	<table class="table table-hover table-bordered table-condensed"
+		id="viewTable">
+		<tr>
+			<th>单号：</th>
+			<td><span id="appId">tl-{$item.id}</span><span id='cancel'
+				style="display: none;">
+					<button class='btn btn-warning btn-xs' onclick="cancelApp()">撤销用车申请</button>
+			</span></td>
+		</tr>
+		<tr>
+			<th>状态：</th>
+			<td>{$item.statusText}</td>
+		</tr>
+		<tr>
+			<th>申请时间：</th>
+			<td>{$item.creTime}</td>
+		</tr>
+		<tr>
+			<th>申请人：</th>
+			<td id="userName">{$item.userName}</td>
+		</tr>
+		<tr>
+			<th>用车部门：</th>
+			<td>{$item.depName}</td>
+		</tr>
+		<tr>
+			<th>出发点：</th>
+			<td>{$item.beginPoint}</td>
+		</tr>
+		<tr>
+			<th>目的地：</th>
+			<td>{$item.destination}</td>
+		</tr>
+		<tr>
+			<th>事由：</th>
+			<td>{$item.reson}</td>
+		</tr>
+		<tr>
+			<th>拟定出发时间：</th>
+			<td>{$item.beginTime}</td>
+		</tr>
+		<tr>
+			<th>拟定返回时间：</th>
+			<td>{$item.returnTime}</td>
+		</tr>
+		<tr>
+			<th>预选车辆：</th>
+			<td id='driverPre'>{$item.driverPre}</td>
+		</tr>
+		<tr>
+			<th>操作日志：</th>
+			<td id="logs">{$item.logs}</td>
+		</tr>
+		<tr>
+			<th id="refuseReson">司机/车辆：</th>
+			<td id='driverInfo'>{$item.driverInfo}</td>
+		</tr>
+		<tr>
+			<th>评价：</th>
+			<td id="rank">{$item.appRank}</td>
+		</tr>
+
+		<tr style='display: none;' class="permitDiv">
+			<td><input style='display: none;' type="text"
+				value="{$item.id}"></td>
+
+			<td id="permit"><div id='permit1'>
+					<button type="button" class="btn btn-success"
+						onclick="openSelectWins('getDriverList.html','选择司机车辆信息')">选择司机车辆信息</button>
+					<select id="refuseReson" name="refuseReson" class="btn btn-danger"><option
+							value="无车">请选择拒绝派车理由</option>
+						<option value="暂无空闲车辆">暂无空闲车辆</option>
+						<option value="禁止同一人同时派多台车">禁止同一人同时派多台车</option>
+						<option value="派车单填写无效">派车单填写无效</option>
+						<option value="雪天路滑，不能派车">雪天路滑，不能派车</option>
+						<option value="中心或部门领导未批准">领导未批准</option>
+						<option value="去市外需要行政事务批准">去市外需要行政事务批准</option>
+						<option value="0" style="color: #0f0">>>手动填写理由</option></select>
+				</div>
+				<div id='permit2'>
+					<button class='btn btn-primary' onclick="agreeOperation()">同意</button>
+					<button class='btn btn-danger' onclick="agreeOperation(false)">不同意</button>
+				</div></td>
+		</tr>
+		<tr style="display: none;" id="evaluate">
+			<th style="color: #33e;">对本次用车做出评价</th>
+			<td class="form-inline"><span>打分：</span><select
+				class="form-control" id="appRank"><option value='1'>1</option>
+					<option value="2">2</option>
+					<option value="3" selected="selected">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option></select>
+				<button class="btn btn-default" onclick="evaluateCommit()">确认</button></td>
+		</tr>
+		<tr id="redo" style="display: none;">
+			<td></td>
+			<td><div>
+					<span style="color: red;">操作成功，<a
+						href='javascript:history.go(-1);' class='btn btn-link'>点此返回</a>或
+					</span> <a href="javascript:history.go(0);" class='btn btn-link'>刷新</a>
+				</div></td>
+		</tr>
+		<tr style="visibility: hidden;" class="permitDiv">
+			<th style="color: #33e;">自定义拒绝理由</th>
+			<td><input id="myrefuse" style="width: 350px;" maxlength="20">
+				<button id="refuse0" class="btn btn-default">确认</button></td>
+		</tr>
+	</table>
+</div>
+
+<script>
+	var ddd, cuser, role, status, index;
+	// 判断用户角色
+	function ifAppoval() {
+		cuser = " {$Think.session.user.name} ";
+		role = "{$Think.session.user.role}";
+		status = "{$item.status}";
+		if (status == 5) {
+			$("#refuseReson").text("拒绝理由：");
+		}
+		var appovalText = [ "{$appovalText.0}", "{$appovalText.1}",
+				"{$appovalText.2}", "{$appovalText.3}", "{$appovalText.4}",
+				"{$appovalText.5}" ];
+		var toType = "{$item.toType}";
+		index = appovalText.indexOf(role); // -1 0-5 调度-用户
+		if (index == 5 && $("#userName").text() == $.trim(cuser)) { // 用户
+			if (status == 0)//	可撤销
+				return 0;
+			else if (status == 6)// 待评价
+				return 3;
+		} else if (index == 4 || index == 3) { //主任、经理
+			if (status == 0)
+				return 1;
+		} else if (index == 2) { //行政事 务
+			if (toType == 1 && status == 2)
+				return 1;
+		} else if (index == 1) { //副总
+			if (toType == 2 && status == 2)
+				return 1;
+		} else if (index == 0) { //车辆调度
+			if ((toType == 0 && status == 2)
+					|| ((toType == 1 || toType == 2) && status == 4))
+				// 仅判断可以进行审批的申请单
+				return 2;
+		}
+		return -1;
+	}
+	$(function($) {
+		logReplace();
+		if (ifAppoval() == 0) { //	普通用户填完申请的状态
+			$("#cancel").show();
+			noSend();
+		} else if (ifAppoval() == 1) { //	待审批状态
+			$("#permit1").hide().parent().parent().show();
+		} else if (ifAppoval() == 2) { //	待派车状态
+			$("#permit2").hide().parent().parent().show();
+		} else if (ifAppoval() == 3) { //	待评价状态
+			$("#evaluate").show();
+		} else if (status < 5) {
+			noSend();
+		}
+		function noSend(){
+			$("#permit").html('<b style="color: red;">审批同意后方可派车</b>').parent().show();
+		}
+		// 拒绝派车
+		$("#refuseReson").on("change", function() {
+			var refuseReson = $("#refuseReson option:selected").val();
+			if (refuseReson == 0) {
+				$("#refuse0").parent().parent().css("visibility", "visible");
+				myrefuseitself();
+			} else {
+				addLogs(refuseReson, "driverInfo");
+				var info = role + cuser + "拒绝派出车辆";
+				addLogs(info);
+				update(5, info, refuseReson);
+				disableDiv();
+			}
+		});
+	});
+	
+	// 自定义拒绝函数
+	function myrefuseitself() {
+		$("#refuse0").click(function() {
+			var refuseReson;
+			if ($("#myrefuse").val() == "") {
+				refuseReson = "无条件拒绝";
+			} else {
+				refuseReson = $("#myrefuse").val();
+			}
+			addLogs(refuseReson, "driverInfo");
+			var info = role + cuser + "拒绝派出车辆";
+			addLogs(info);
+			update(5, info, refuseReson);
+			disableDiv()
+		});
+	}
+	// 弹出选择司机车辆窗口
+	function openSelectWins(url, title) {
+		$.getScript("__ROOT__/static/zDialog/zDialog.js", function() {
+			$.getScript("__ROOT__/static/zDialog/zDrag.js", function() {
+				var diag = new Dialog();
+				diag.Width = 750;
+				diag.Height = _htmlHeight * 0.6;
+				diag.Title = title != undefined ? title : "";
+				diag.URL = url;
+				diag.OKEvent = function() {
+					//var driverId = diag.innerFrame.contentWindow.document.getElementById('a1').value;
+					var driverInfo = diag.innerFrame.contentWindow.document
+							.getElementById('a2').value;
+					okEnv(driverInfo);
+				};
+				diag.show();
+				function okEnv(driverInfo) {
+					diag.close();
+					if (driverInfo != '') {
+						Dialog.confirm("确定选择\"" + driverInfo + "\"？",
+								function() {
+									addLogs(driverInfo, "driverInfo");
+									var info = role + cuser + "已派出车辆";
+									addLogs(info);
+									update(6, info, driverInfo);
+									disableDiv();
+								});
+					}
+				}
+			});
+		});
+	}
+	// 执行审批
+	function agreeOperation(f) {
+		if (f == null) {
+			f = true;
+		}
+		var newStatus = parseInt(status, 10) + (f ? 2 : 1);
+		var option = f ? "已同意" : "已拒绝";
+		var info = role + cuser + option;
+		addLogs(info + "，" + getNow());
+		update(newStatus, info);
+		disableDiv();
+	}
+	//	撤销申请
+	function cancelApp() {
+		$.getScript("__ROOT__/static/zDialog/zDialog.js", function() {
+			Dialog.confirm("确认撤销用车申请？", function() {
+				var info = role + cuser + "已撤销";
+				addLogs(info + "，" + getNow());
+				update(11, info);
+				//history.go(-1);
+			});
+		});
+	}
+	// 更新表单的logs信息 
+	function addLogs(data, id) {
+		if (id == undefined) {
+			id = 'logs';
+			$("#" + id).html($("#logs").html() + "<br>" + data + "；");
+		} else {
+			$("#" + id).html(data);
+		}
+		logReplace();
+	}
+	// 操作结束冻结按钮
+	function disableDiv() {
+		$(".permitDiv button").attr("disabled", "disabled");
+		$(".permitDiv select").attr("disabled", "disabled");
+		$("#redo").show();
+	}
+
+	//	评价
+	function evaluateCommit() {
+		var appRank = $("#appRank").val();
+		var info = role + cuser + "已评价";
+		addLogs(info + "，" + getNow());
+		update(7, info, null, appRank);
+		$("#rank").text(appRank);
+		$("#evaluate").fadeOut();
+
+	}
+	// 操作上传至服务器
+	function update(status, info, driverInfo, appRank) {
+		var data = {
+			status : status,
+			info : info,
+			driverInfo : driverInfo,
+			appRank : appRank,
+		}
+		console.log(data);
+		console.info("prepared Data↑：");
+		$.post("updateApp.html?id={$item.id}", data, function(data) {
+			if (data.code == 1) {
+				dhtmlx.message({
+					text : "操作成功"
+				});
+			} else {
+				alert("出错了。联系管理员");
+			}
+		});
+	}
+	
+	function logReplace() {
+	}
+	function logReplace() {
+		var ori = $("#logs").text();
+		var _ori = ori.split("；");
+		var html = '';
+		for ( var i in _ori) {
+			html += '<div><span>' + _ori[i] + '</span></div>';
+		}
+		$("#logs").html(html);
+		$("#logs span:contains('同意')").addClass("text-success");
+		$("#logs span:contains('派出车辆')").addClass("text-success");
+		$("#logs span:contains('评价')").addClass("text-success");
+		$("#logs span:contains('拒绝')").addClass("text-danger");
+		$("#logs span:contains('撤销')").addClass("text-info");
+
+		/*html = html.replace(/([^span]*同意)/g, " class='bg-success'$1");
+		html = html.replace(/([^span]*派出车辆)/g, " class='bg-success'$1");
+		html = html.replace(/([^span]*评价)/g, " class='bg-success'$1");
+		html = html.replace(/([^span]*拒绝*)/g, " class='bg-danger'$1");
+		html = html.replace(/([^span]*撤销*)/g, " class='bg-warning'$1");*/
+		//$("#logs").html(html);
+	}
+	// 美化logs，分号后加<br>
+	function logReplace() {
+		var ori = $("#logs").text();
+		ori = ori.replace(/；/g, "；<br>")
+		ori = ori.replace(/(同意|派出车辆|评价)/g, "<b style='color: #5cb85c;'>$1</b>");
+		ori = ori.replace(/(拒绝)/, "<b style='color: #f00;'>$1</b>");
+		ori = ori.replace(/(撤销)/, "<b style='color: #9b03bf;'>$1</b>");
+		$("#logs").html(ori);
+	}
+
+	// 获取当前时间戳
+	function getNow() {
+		var now = new Date();
+		var year = now.getFullYear(); //getFullYear getYear
+		var month = now.getMonth();
+		var date = now.getDate();
+		var day = now.getDay();
+		var hour = now.getHours();
+		var minu = now.getMinutes();
+		var sec = now.getSeconds();
+		month = month + 1;
+		if (month < 10)
+			month = "0" + month;
+		if (date < 10)
+			date = "0" + date;
+		if (hour < 10)
+			hour = "0" + hour;
+		if (minu < 10)
+			minu = "0" + minu;
+		if (sec < 10)
+			sec = "0" + sec;
+		var time = "";
+		time = year + "-" + month + "-" + date + " " + hour + ":" + minu + ":"
+				+ sec;
+		return time;
+	}
+</script>
+{/block}

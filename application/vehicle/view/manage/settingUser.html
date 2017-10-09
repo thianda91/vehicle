@@ -1,0 +1,168 @@
+{extend name="vehicle@common/base" /} {block name="leftmenu"}{include
+file="common/leftMenu" /} {/block}{block name="main"}
+<script>
+if(!document.addEventListener){
+	
+}
+</script>
+{include file="common/ie8warning" /}
+<style>
+.dhtmlx_container div {
+	position: relative;
+	display: inline-block;
+}
+
+#data_container {
+	position: absolute;
+	left: 20px;
+	top: 120px;
+}
+
+#formInfo_container {
+	position: absolute;
+	left: 250px;
+	top: 120px;
+}
+
+#form_container {
+	position: absolute;
+	left: 600px;
+	top: 120px;
+}
+</style>
+<div class="htmltitle">
+	<h2>{$title|default='欢迎使用'}</h2>
+	<p>这里可以管理用户账户信息，修改密码等</p>
+</div>
+<div class="dhtmlx_container" style="height: 100%;">
+	<div id="data_container" style="width: 200px; height: 100%;"></div>
+	<div id="formInfo_container" style="width: 300px;"></div>
+	<div id="form_container" style="width: 300px; height: 550px;"></div>
+</div>
+
+
+
+
+<script>
+var myList = new dhtmlXList({
+    container:"data_container",
+    type:{
+        template:"<div style='font-size: 12px;'>#id#: #loginName# #name#<br/>#dep# #dep2#</div>"
+    }
+});
+var dataList = {data:{$list}};	//此形式便于 myList.parse()使用
+myList.parse(dataList,"json");
+myList.attachEvent("onAfterSelect", function(id) {
+	var index = myList.indexById(id);
+	var formData = dataList['data'][index];
+	form_init(formData);
+});
+
+var myForm,evId;
+//	初始化修改表单
+function form_init(formData){
+	$("#formInfo_container").html("");
+	var	formStructure = [
+		{type:"fieldset",label:"用户信息修改(编号："+formData['id']+")",inputWidth:"auto",list:[
+      		{type:"settings",labelWidth:70,inputWidth:140},
+      		{type:"block",inputWidth:"auto",blockOffset:0,offsetTop:0,list:[
+				{"type":"input","name":"loginName","label":"登陆名"},
+				{"type":"input","name":"name","label":"姓名"},
+				{"type":"input","name":"phone","label":"电话"},
+				{"type":"input","name":"dep","label":"中心"},
+				{"type":"input","name":"dep2","label":"部门"},
+				{"type":"input","name":"office","label":"单位"},
+				{"type":"select","name":"role","label":"角色",options:[
+				]},
+			]},
+			{type:"block",inputWidth:"auto",blockOffset:"30",offsetTop:20,list:[
+				{"type":"button","name":"yes","value":"提交修改"},
+				{type:"newcolumn"},
+				{"type":"button","name":"no","value":"取消"},
+				{type:"newcolumn"},
+				{"type":"button","name":"resetpwd","value":"重置密码"},
+			]}
+      	]}
+	];
+	myForm = null;
+	myForm = new dhtmlXForm('formInfo_container',formStructure);
+	formStructure = null;
+	$.post("getOptions.html",{optionName:'role_names'},function(data){
+		myForm.reloadOptions("role",data);
+		myForm.loadStruct({data: formData});
+	});
+	if( evId != null )
+		myForm.detachEvent("evId");
+	evId = myForm.attachEvent("onButtonClick", function(id){
+		var mainId = myList.getSelected();
+		if(id=="yes"){
+			$.post("{$_SERVER["REQUEST_URI"]}?id="+formData['id'],myForm.getFormData(),function(data){
+				if(data['code']==1){
+					dhtmlx.alert({text:"修改成功,将刷新本页面。",callback:function(){history.go(0);}});
+				}else{
+					dhtmlx.alert({text: data['msg']});
+				}
+			});
+		} else if(id=="no"){
+			myForm.loadStruct({data: formData});
+		}else if(id=="resetpwd"){
+			dhtmlx.confirm({type:"confirm-warning",title:"密码重置操作",ok:"确认",cancel:"取消",text:"将要把当前用户的密码重置为{$default_pwd}",callback:function(result){
+				if(result){
+					$.post("resetPwd.html",{id:formData['id'],_method:'put'},function(data){
+						if(data['code']==1)
+							dhtmlx.alert({text:"已重置为{$default_pwd}！"});
+						else {
+							dhtmlx.alert({type:"confirm-warning",title:"密码重置失败",text:"请联系开发者查看console处理！"});
+							console.log(data);
+						}
+					});
+				}else{
+					dhtmlx.alert({text:"您取消操作"});
+				}
+			}});
+			
+		}else if(id){
+			alert(id+",Error!");
+		}
+	});
+}
+
+
+var formStructure2 = [
+    {type: "fieldset",name:"Search", label: "查找用户", list:[
+    	{type:"settings",labelWidth:70,inputWidth:140},
+    	{type:"block",inputWidth:"auto",blockOffset:0,offsetTop:0,list:[
+			{"type":"combo","name":"laberName","label":"查找条件",options:[
+				{text: "登录名", value: "#loginName#"},
+				{text: "姓名", value: "#name#"},
+				{text: "电话", value: "#phone#"},
+				{text: "中心", value: "#dep#"},
+				{text: "部门", value: "#dep2#"},
+			]},
+			{"type":"input","name":"keyword","label":"查找内容"}
+		]},
+		{type:"block",inputWidth:"auto",blockOffset:"30",offsetTop:20,list:[
+			{"type":"button","name":"yes","value":"查询"},
+			{type:"newcolumn"},
+			{"type":"button","name":"no","value":"重置"},
+		]}
+]}
+];
+var myForm2 = new dhtmlXForm("form_container",formStructure2);
+myForm2.attachEvent("onButtonClick", function(id){
+	if(id=="yes"){
+		var laberName = myForm2.getItemValue("laberName");
+		var keyword = myForm2.getItemValue("keyword");
+		myList.filter(laberName,keyword);
+	}else if(id=="no"){
+		myForm2.clear();
+		myList.filter();
+		$("#formInfo_container").html("");
+	}	else{
+		alert(id+",Error!");
+	}
+	
+});
+
+</script>
+{/block}

@@ -1,0 +1,21 @@
+<!--[if lte IE 8]>
+<div id="ie8">
+<div class="alert alert-danger alert-dismissible fade in" role="alert">
+	<button type="button" class="close" data-dismiss="alert"
+		aria-label="Close">
+		<span aria-hidden="true">×</span>
+	</button>
+	<h4>请注意</h4>
+	<p>您当前的浏览器不支持使用本页面的功能。请使用IE9+等现代浏览器访问。</p>
+	<p>
+		<button type="button" class="btn btn-danger">知道啦</button>
+		<button type="button" class="btn btn-default">忽略</button>
+	</p>
+</div>
+</div>
+<script>
+$(function(){
+	$(".content").html($("#ie8").html());
+});
+</script>
+<![endif]-->

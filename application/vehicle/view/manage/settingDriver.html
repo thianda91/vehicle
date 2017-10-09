@@ -1,0 +1,179 @@
+{extend name="vehicle@common/base" /} {block name="leftmenu"}{include
+file="common/leftMenu" /} {/block}{block name="main"}
+<script>
+if(!document.addEventListener){
+	
+}
+</script>
+{include file="common/ie8warning" /}
+<style>
+.dhtmlx_container div {
+	position: relative;
+	display: inline-block;
+}
+
+#data_container {
+	position: absolute;
+	left: 20px;
+	top: 120px;
+}
+
+#formInfo_container {
+	position: absolute;
+	left: 250px;
+	top: 120px;
+}
+
+#form_container {
+	position: absolute;
+	left: 600px;
+	top: 120px;
+}
+</style>
+<div class="htmltitle">
+	<h2>{$title|default='欢迎使用'}</h2>
+	<p>这里可以管理司机车辆信息</p>
+</div>
+<div class="dhtmlx_container" style="height: 100%;">
+	<div id="data_container" style="width: 200px; height: 100%;"></div>
+	<div id="formInfo_container" style="width: 300px;"></div>
+	<div id="form_container" style="width: 300px; height: 550px;"></div>
+</div>
+
+
+
+
+<script>
+var myList = new dhtmlXList({
+    container:"data_container",
+    type:{
+        template:"<div style='font-size: 12px;'> #carNo# #carType#<br/>#driverName# #driverPhone#</div>"
+    }
+});
+var dataList = {data:{$list}};	//此形式便于 myList.parse()使用
+showList(dataList);
+function showList(dataList){
+	myList.clearAll();
+	myList.parse(dataList,"json");
+	myList.attachEvent("onAfterSelect", function(id) {
+		var index = myList.indexById(id);
+		var formData = dataList['data'][index];
+		form_init(formData);
+	});
+}
+var myForm,evId;
+//	初始化修改表单
+function form_init(formData){
+	$("#formInfo_container").html("");
+	var	formStructure = [
+		{type:"fieldset",label:"司机车辆信息修改(编号："+formData['id']+")",inputWidth:"auto",list:[
+      		{type:"settings",labelWidth:70,inputWidth:140},
+      		{type:"block",inputWidth:"auto",blockOffset:0,offsetTop:0,list:[
+				{"type":"select","name":"office","label":"所属单位"},
+				{"type":"input","name":"driverName","label":"司机名"},
+				{"type":"input","name":"driverPhone","label":"电话"},
+				{"type":"input","name":"carNo","label":"车牌号"},
+				{"type":"input","name":"carType","label":"车型"},
+				{"type":"select","name":"status","label":"状态",options:[
+					{value:"空闲",text:"空闲"},
+					{value:"出车",text:"出车"},
+					{value:"保养",text:"保养"},
+					
+				]},
+			]},
+			{type:"block",inputWidth:"auto",blockOffset:"30",offsetTop:20,list:[
+				{"type":"button","name":"yes","value":"提交修改"},
+				{type:"newcolumn"},
+				{"type":"button","name":"delete","value":"删除"},
+				//{type:"newcolumn"},
+				//{"type":"button","name":"create","value":"新增"},
+			]}
+      	]}
+	];
+	myForm = null;
+	myForm = new dhtmlXForm('formInfo_container',formStructure);
+	formStructure = null;
+	$.post("getOptions.html",{optionName:'office_names'},function(data){
+		myForm.reloadOptions("office",data);
+		myForm.loadStruct({data: formData});
+	});
+	if( evId != null )
+		myForm.detachEvent("evId");
+	evId = myForm.attachEvent("onButtonClick", function(id){
+		var mainId = myList.getSelected();
+		if(id=="yes"){
+			$.post("{$_SERVER["REQUEST_URI"]}?id="+formData['id'],myForm.getFormData(),function(data){
+				showList({data:data});
+				myForm.unload();
+				myForm = null;
+				dhtmlx.message({text:"修改成功"});
+			});
+		} else if(id=="delete"){
+			dhtmlx.confirm({text: "确认将司机"+formData['driverName']+"删除？",callback: function(){
+				$.post("{$_SERVER["REQUEST_URI"]}?id="+formData['id'],{_method:"delete"},function(data){
+					showList({data:data});
+					myForm.unload();
+					myForm = null;
+					dhtmlx.alert({text:"已删除。"});
+				});
+			}});
+		}else if(id=="create"){
+			
+			
+		}else if(id){
+			alert(id+",Error!");
+		}
+	});
+}
+
+
+var formStructure2 = [
+    {type: "fieldset",name:"Search", label: "新增条目", list:[
+    	{type:"settings",labelWidth:70,inputWidth:140},
+    	{type:"block",inputWidth:"auto",blockOffset:0,offsetTop:0,list:[
+			{"type":"select","name":"office","label":"所属单位"},
+			{"type":"input","name":"driverName","label":"司机名"},
+			{"type":"input","name":"driverPhone","label":"电话"},
+			{"type":"input","name":"carNo","label":"车牌号"},
+			{"type":"input","name":"carType","label":"车型"},
+			//{"type":"input","name":"status","label":"状态"},
+			{"type":"hidden","name":"_method",value:"PUT"},
+		]},
+		{type:"block",inputWidth:"auto",blockOffset:"30",offsetTop:20,list:[
+			{"type":"button","name":"new","value":"新增"},
+			{type:"newcolumn"},
+			{"type":"button","name":"cancel","value":"取消"},
+		]}
+	]}
+];
+
+var myForm2 = new dhtmlXForm("form_container",formStructure2);
+var office_names ={};
+$.post("getOptions.html",{optionName:'office_names'},function(data){
+	var office_names = data;
+	myForm2.reloadOptions("office",data);
+});
+myForm2.attachEvent("onButtonClick", function(id){
+	if(id=="new"){
+		$.post("{$_SERVER["REQUEST_URI"]}",myForm2.getFormData(),function(data){
+			if(data['code']==1){
+				dhtmlx.alert({text:"新增成功。",callback:function(){history.go(0);}});
+			}
+		});
+	}else if(id=="cancel"){
+		myForm2.clear();
+	}else{
+		alert(id+",Error!");
+	}
+	
+});
+
+
+
+
+
+
+</script>
+
+
+{/block}

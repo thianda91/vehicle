@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>自助服务平台-Xianda-tlydgs</title>
+
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<script type="text/javascript" src="/static/zDialog/zDrag.js"></script>
+<script type="text/javascript" src="/static/zDialog/zDialog.js"></script>
+<script type="text/javascript" src="/static/jq/j.js"></script>
+<!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+<style type="text/css">
+div{padding:0;margin:0 auto;}
+body{background: rgb(40,39,37) url('/static/index.img/body-bg.jpg') no-repeat;}
+body,div{background-position:50% 0%;}
+.the_page{padding:0;font-size:12px;font-family:"Microsoft YaHei";color:#8c8c8c;position: relative;width: 1000px;-moz-user-select:none;-webkit-user-select:none;}
+a{text-decoration:none;color:#0f0}
+.alpha_bg{display:none;background-color:rgba(255,255,255,.2);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#4cffffff, endColorstr=#4cffffff);position:absolute;left:0px;top:0px;width:100%;height:100%;z-index:10;}
+.alpha_bg span a{float:right;font-size:60px;}
+.alpha_bg div{margin:250px auto;width:1000px;}
+h1{color:#fff;text-align:center;padding:20px}
+big{color:#0f0;font-size:300%}
+.web_map{margin: 0;font-size:22px;width:100%}
+.web_map ul{width:100%;list-style:none; margin:0;padding:0;}
+.web_map ul li{width:240px;height:130px;margin:5px;font-weight:700;background-color:rgba(0,0,0,0.5);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f000000, endColorstr=#7f000000);text-align:center;float:left;}
+.web_map ul li.tlcar{background-color:rgba(50,230,50,0.5);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f30bb30, endColorstr=#7f30bb30);}
+
+.web_map ul li a{color:#fff;font-size:150%;text-decoration:none;display:block;border:1px solid #fff;line-height:126px;}
+.web_map ul li:HOVER{background-color:rgba(0,200,0,0.4);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f333333, endColorstr=#7f60d760);}
+.hideDiv{margin:0;padding:0 50px;}
+.hideDiv a{color:#000;font-size:24px;text-decoration:none;}
+
+
+</style>
+<script>
+	//***随鼠标动提示框
+	var c$ = {};
+	var w$ = function(s) {
+		document.write(s);
+	};
+	var o$ = function(id) {
+		return document.getElementById(id);
+	};
+	w$("<div id=\"tlts\" style=\"position:absolute;color:#0000ff;background-color:#ffff40;font-size: 12px;padding: 3px; border: 1px solid #FFCC99;display:none\"></div>");
+
+	c$.mmove = function(o, s) {
+		// alert(typeof(s));
+		var evt = event || window.event;
+		if (s == "" || typeof (s) == "undefined") {
+			o$("tlts").innerHTML = o.innerHTML;
+		} else {
+			o$("tlts").innerHTML = s;
+		}
+		var x = evt.clientX - o$("tlts").offsetWidth/2;
+		var y = evt.clientY - 40;
+		o$("tlts").style.left = x + "px";
+		o$("tlts").style.top = y + "px";
+		o$("tlts").style.display = "";
+	};
+	c$.mout = function() {
+		o$("tlts").style.display = "none";
+	};
+	//***随鼠标动提示框
+	function close_this(a){
+		a.style.display="none";
+	}
+	function openOffice(){
+		var diag= new Dialog();
+		diag.Title="Office下载";
+		diag.Height=300;
+		diag.Width=600;
+		diag.ShowMessageRow = true;
+		diag.MessageTitle = "Office 办公软件下载";
+		diag.Message = "请根据自己的喜好选择适合的版本。";
+		diag.InvokeElementId="office_con";
+		diag.OKEvent = function(){diag.close();};
+		diag.show();
+	}
+	function open_Diag(_url,_title){
+		var diag= new Dialog();
+		diag.Title=_title;
+		diag.Height=550;
+		diag.Width=document.body.offsetWidth-100;
+		diag.URL=_url;
+		diag.OKEvent = function(){diag.close();};
+		diag.show();
+		
+	}
+	function open_Diag2(_url,_title){
+		var diag= new Dialog();
+		diag.Title=_title;
+		diag.ShowMessageRow = true;
+		diag.MessageTitle = "省公司统一信息平台IT服务中心-"+_title.substring(0,4);
+		diag.Message = "省公司统一信息平台IT服务中心网址：http://10.64.17.86:1002/，本页面内容原始地址："+_url;
+		diag.Height=550;
+		diag.Width=document.body.offsetWidth-100;
+		diag.URL=_url;		
+		diag.OKEvent = function(){diag.close();};
+		diag.show();
+		var _divinfo="<div>省公司统一信息平台IT服务中心网址：<a href='http://10.64.17.86:1002'>http://10.64.17.86:1002/</a>，本页面原始地址："+_url+"</div>";
+	}
+</script>
+
+</head>
+
+<body>
+<div id='alpha_bg' class='alpha_bg' onclick="close_this(o$('alpha_bg'))"><span><a href="javascript:close_this(o$('alpha_bg'));">×&nbsp;</a></span><div>(此 div 暂未 使用)</div></div>
+	<div class='the_page' style="" unselectable="on" onselectstart="return false;">
+	
+		<h1>-自助服务平台-Xianda</h1>
+		<div style="display:none;">
+			该平台不断完善中！<big style='color:#0f0';>登陆派车系统</big>的同事<a target="_blank"
+				onmousemove="c$.mmove(this,'tlydgs派车系统');" onmouseout="c$.mout();"
+				href='/TLCAR' title='tlydgs派车系统'>点此跳转</a>
+		</div>
+		
+		<div class='web_map'>
+			<span style="color:rgb(0,200,0);">功能导航</span><span style="padding-left:50px;"><a href='/MS17-010'>MS17-010</a></span>
+			<ul id="ul">
+				<li class='tlcar'><a target="_blank" href='/TLCAR/' title='tlydgs派车系统'>派车系统</a></li>
+				<li class='tlcar'><a target="_blank" href='/vehicle/' title='tlydgs派车系统'>公务车管理</a></li>
+				<li><a target="_blank" href='http://10.65.187.202/kxeams/'>客响维材管理</a></li>
+				<li><a target="_blank" href='http://10.65.187.202/esweb/'>Excel服务器</a></li>
+				<li class='txl'><a href="/TLCAR/txl_static.html" onclick='open_Diag(this.href,this.innerHTML);return false;'>铁岭通讯录</a></li>
+				<li class='office'><a href='javascript:openOffice();'>Office安装包</a></li>
+				<li><a href='/share/' onclick='open_Diag(this.href,this.innerHTML);return false;'>Shared Files</a></li>
+				<li class='flash'><a href='/share/flash_addon/' onclick='open_Diag(this.href,this.innerHTML);return false;'>Flash插件</a></li>
+				<li class='other_software'><a href='/share/software/' onclick='open_Diag(this.href,this.innerHTML);return false;'>常用软件</a></li>
+				<li class='ie_set'><a href='/share/ie_set/' onclick='open_Diag(this.href,this.innerHTML);return false;'>IE设置</a></li>
+				<li class='scripts'><a href='/share/bat/' onclick='open_Diag(this.href,this.innerHTML);return false;'>bat</a></li>
+				<li><a href='http://10.64.17.210/ITServiceCenter/UserManual/List' onclick='open_Diag2(this.href,this.innerHTML);return false;'>用户手册(省)</a></li>
+				<li><a href='http://10.64.17.210/ITServiceCenter/CommonTool/List' onclick='open_Diag2(this.href,this.innerHTML);return false;'>常用工具(省)</a></li>
+				<li><a href='/tltable/pages/export_excel_csv.html' onclick='open_Diag(this.href,this.innerHTML);return false;'>竞赛项目导出</a></li>
+				<li><a href='#' onclick='alert("建设中，敬请期待！");return false;'>办公技巧</a></li>
+			</ul>
+			<!-- 功能导航 web_map 结束-->
+		</div>
+		<div id="office_con" class='office_con hideDiv' style="display: none;">
+			<a href="/share/software/Office%202007_Setup.exe">Office 2007</a><br>
+			<a href="http://10.61.214.77:8081/share/software/cn_office_professional_plus_2010_with_sp1_x86_x64_732114.iso">Office 2010 专业版</a><br>
+			<a href="http://10.61.214.72:8081/share/software/cn_office_professional_plus_2013_with_sp1_x86_and_x64_dvd_3921921.zip">Office 2013 专业版</a><br>
+			<a href="http://10.61.214.72:8081/share/software/cn_office_professional_plus_2016_x86_x64_dvd_6969182.iso">Office 2016 专业版</a><br><br>
+			<a href="/share/software/Office_Visio_Pro_2007.zip">Office visio 2007</a><br>
+			<a href="http://10.61.214.72:8081/share/software/cn_visio_professional_2016_x86_x64_dvd_6970929.iso">Office visio 2016</a><br>
+			<a href="/share/software/KMSpico_v10.1.6Portable.7z">2010、2013、2016激活工具</a><br><br>
+			<!-- office_con 结束-->
+		</div>
+	</div>
+</body>
+
+
+</script>
+
+</html>

@@ -1,0 +1,123 @@
+<html>
+<head>
+{include file="common/c" /}
+<style>
+body {
+	height: 100%;
+	background: url("__PUBLIC__/static/index.img/sjbpc-1440.jpg") no-repeat
+		center bottom;
+	/*background-size: 100%;*/
+	background-attachment: fixed;
+	background-color: #000;
+}
+
+.bg-h1 {
+	color: #fff;
+}
+
+label.btn-success {
+	background-color: #808080;
+	border-color: #c0c0c0;
+}
+
+.h1 {
+	background-color: rgba(0, 0, 0, 0.5);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f000000,
+		endColorstr=#7f000000);
+	margin-left: 150px;
+}
+
+.login-btn {
+	margin-left: 200px;
+	width: 150px;
+	font-size: 26px;
+}
+
+.container {
+	background-color: #fff;
+	width: 350px;
+	height: 300px;
+	position: absolute;
+	right: 10%;
+	top: 20%;
+	padding-top: 15px;
+	display: none;
+}
+</style>
+</head>
+<body>
+	<h1 class="bg-h1 h1">您好，欢迎使用公务车管理系统!</h1>
+	<div class="container">
+		<div>
+			<form method="post" action="index">
+				<div class="form-group">
+					<label for="username">账号</label> <input type="text"
+						class="form-control" id="username" name="username"
+						placeholder="姓名全拼">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputPassword1">密码</label> <input
+						type="password" class="form-control" id="password" name="password"
+						placeholder="请输入密码">
+				</div>
+				<div class="form-group" data-toggle="buttons">
+					<label class="rember btn btn-success" data-toggle="tooltip"
+						data-placement="right" title="" data-original-title="点击保存登陆信息">
+						<input style="display: none;" type="checkbox" id="rember"
+						name="rember">保存登陆信息
+					</label>
+
+					<p class="help-block">按下记住密码</p>
+				</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-success">登陆</button>
+					<a class="btn btn-default" href="register.html">注册账户</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div id="registerDIV"></div>
+</body>
+<script>
+	$(function() {
+		$('[data-toggle="tooltip"]').tooltip();
+		$(".container").fadeIn(2000);
+		$("#username").val(getCookies("tlvehiclename"));
+		if (getCookies("tlvehicleifcookiepwd") == "yes") {
+			$("#rember").attr("checked", "checked");
+			$(".rember").addClass("active");
+			$("#password").val(getCookies("tlvehiclepwd"));
+		}
+	});
+	$("form").on("submit", function() {
+		setCookies("tlvehiclename", $("#username").val(), 30);
+		if ($("#rember").is(":checked")) {
+			setCookies("tlvehiclepwd", $("#password").val(), 30);
+			setCookies("tlvehicleifcookiepwd", "yes", 30);
+		} else { //	清除pwd的cookie
+			setCookies("tlvehiclepwd", "", -1);
+			setCookies("tlvehicleifcookiepwd", "", -1);
+		}
+	});
+
+	function setCookies(c_name, value, expiresdays) {
+		var exdate = new Date();
+		exdate.setDate(exdate.getDate() + expiresdays);
+		document.cookie = c_name + "=" + escape(value) + ";expires="
+				+ exdate.toGMTString();
+	}
+	function getCookies(c_name) {
+		if (document.cookie.length > 0) {
+			c_start = document.cookie.indexOf(c_name + "=");
+			if (c_start != -1) {
+				c_start = c_start + c_name.length + 1;
+				c_end = document.cookie.indexOf(";", c_start);
+				if (c_end == -1)
+					c_end = document.cookie.length;
+				return unescape(document.cookie.substring(c_start, c_end));
+			}
+		}
+		return "";
+	}
+</script>
+</html>

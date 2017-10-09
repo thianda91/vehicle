@@ -1,0 +1,184 @@
+{extend name="vehicle@common/base" /} {block name="leftmenu"}{include
+file="common/leftMenu" /} {/block}{block name="main"}
+<style>
+.submitDiv button {
+	margin-left: 30px;
+}
+
+.th {
+	width: 130px;
+}
+
+.value {
+	width: 370px;
+}
+#msg1{
+	border: none;
+}
+</style>
+<div class="htmltitle">
+	<h2>
+		个人资料<small style="margin-left: 60px;"><button
+				class="btn btn-default" onclick="showPwd('formInfo','formPwd')">密码修改</button></small>
+	</h2>
+	<p id="msg">{$msg|default=""}</p>
+</div>
+<div>
+	<div class="table-responsive">
+		<form id="formInfo" style="float: left;" action="" method="post">
+			<table class="table table-hover table-bordered " id='infoTable'>
+				<tbody>
+					<tr>
+						<td class="th">登录名：</td>
+						<td class="value"><input class="form-control" type="text" id="loginName"
+							name="loginName" value="{$Think.session.user.loginName}"  /></td>
+						<td id="msg1"></td>
+
+					</tr>
+					<tr>
+						<td class="th">姓名：</td>
+						<td class="value"><input class="form-control" type="text"
+							name="name" value="{$Think.session.user.name}" /></td>
+
+					</tr>
+					<tr>
+						<td class="th">电话：</td>
+						<td class="value"><input class="form-control" type="text"
+							name="phone" value="{$Think.session.user.phone}" /></td>
+
+					</tr>
+					<tr>
+						<td class="th">中心：</td>
+						<td class="value"><input class="form-control" type="text"
+							name="dep" value="{$Think.session.user.dep}" /></td>
+
+					</tr>
+					<tr>
+						<td class="th">部门：</td>
+						<td class="value"><input class="form-control" type="text"
+							name="dep2" value="{$Think.session.user.dep2}" /></td>
+
+					</tr>
+					<tr>
+						<td class="th">单位：</td>
+						<td class="value"><input class="form-control" type="text"
+							name="office" value="{$Think.session.user.office}" /></td>
+
+					</tr>
+					<tr>
+						<td class="th">角色：</td>
+						<td class="value"><input class="form-control" type="text"
+							value="{$Think.session.user.role}" readonly /></td>
+
+					</tr>
+					<tr>
+						<td class="th">用车次数：</td>
+						<td class="value"><input class="form-control" type="text"
+							value="{$Think.session.user.useTimes}" readonly /></td>
+
+					</tr>
+					<tr>
+						<td class="th">评价次数：</td>
+						<td class="value"><input class="form-control" type="text"
+							value="{$Think.session.user.rankTimes}" readonly /></td>
+
+					</tr>
+					<tr>
+						<td class="th">登陆次数：</td>
+						<td class="value"><input class="form-control" type="text"
+							value="{$Think.session.user.loginTimes}" readonly /></td>
+
+					</tr>
+					<tr class="submitDiv">
+						<td>&nbsp;</td>
+						<td class="value"><button class="btn btn-primary"
+								type="submit">提交修改</button>
+							<button class="btn btn-warning" type="reset">取消修改</button></td>
+					</tr>
+
+				</tbody>
+			</table>
+		</form>
+		<form id="formPwd" action="setPwd" method="post"
+			style="float: left; display: none;">
+			<input type="hidden" name="_method" value="PUT">
+			<table class="table table-hover table-bordered " id='pwdTable'>
+				<tr>
+					<td class="th">新密码：</td>
+					<td class="value"><input class="form-control" type="text"
+						name="password" value="" /></td>
+				</tr>
+				<tr>
+					<td class="th">确认密码：</td>
+					<td class="value"><input class="form-control" type="text"
+						name="password_confirm" value="" /></td>
+				</tr>
+				<tr class="submitDiv">
+					<td>&nbsp;</td>
+					<td class="value"><button class="btn btn-primary"
+							type="submit">提交修改</button>
+						<button class="btn btn-warning" type="reset">取消修改</button></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+
+<script>
+	function showPwd(a, b) {
+		var text ={"formInfo":"密码修改","formPwd":"信息修改"};
+		$("#" + a).slideToggle(null, function() {
+			$("#" + b).slideToggle();
+		});
+		$(".htmltitle h2 button").text(text[b]).attr('onclick',"showPwd('"+b+"','"+a+"')");
+	}
+	if({$foucePwd|default='null'}){
+		$(".htmltitle button").click();
+		$("#msg").html("<span style='color: red'>初始密码无法继续使用，请先修改密码。</span>");
+	}
+	/*$("#loginName").on("blur",function(){
+		var loginName = $("#loginName").val();
+		if( loginName.length >0 ){
+			$.post("",{loginName: loginName, _method: "PUT"},function(data){
+				var color = ['red','blue'];
+				if(data['code']){
+					$("#loginName").parent().parent().removeClass('danger');
+				}else{
+					$("#loginName").parent().parent().addClass('danger');
+					$("#loginName").select();
+				}
+				$("#msg1").html("<span style='color: "+color[data['code']]+";'>"+data['msg']+"</span>");
+			});
+		}else{
+			$("#loginName").parent().parent().addClass('danger');
+			$("#loginName").focus();
+			$("#msg1").html("<span style='color: red;'>不能为空。</span>");
+		}
+	});*/
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/block}

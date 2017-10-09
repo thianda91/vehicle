@@ -1,0 +1,22 @@
+{
+    "name": "thianda/vehicle",
+    "description": "公务车管理系统-基于thinkphp5.0.6",
+    "type": "project",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name" : "thianda",
+			"email" : "thianda91@outlook.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "topthink/framework": "5.0.6",
+    },
+    "extra": {
+        "think-path": "thinkphp"
+    },
+    "config": {
+        "preferred-install": "dist"
+    }
+}

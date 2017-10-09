@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="js/zDrag.js?v=20160707"></script>
+<script type="text/javascript" src="js/zDialog.js?v=20160707"></script>
+<title>自助服务平台-首页</title>
+<style>
+@CHARSET "UTF-8";
+.header {
+	z-index: 99;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 50px;
+	background-color: #088bff;
+	color: #eee;
+}
+
+.header a {
+	color: #eee;
+	text-decoration: none;
+}
+
+.header ._title {
+	position: relative;
+	margin: 0 auto;
+	width: 1000px;
+	line-height: 50px;
+	font-size: 30px;
+	font-family: Microsoft YaHei, sans-serif;
+	line-height: 50px;
+}
+
+.header ._title .nav {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	line-height: 20px;
+	font-size: 12px;
+}
+
+.theBody {
+	position: absolute;
+	top: 50px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+.theBody .main {
+	margin: 100px auto 0;
+	padding-left: 2.5%;
+	width: 70%;
+	/*border: 1px solid red;*/
+}
+
+.theBody .main .content {
+	
+}
+
+.theBody .main .content .wraper {
+	margin: 2.5% 0;
+	font-family:  Microsoft YaHei, arial, tahoma,"黑体";
+	font-size: 18px;
+}
+
+.theBody .main .content .wraper a {
+	display: inline-block;
+	text-decoration: none;
+	margin: 5px 10px;
+	color: #33a;
+}
+
+.theBody .main .content .wraper .module {
+	display: inline-table;
+	margin-right: 40px;
+	width: 20%;
+	text-align: center;
+}
+
+.theBody .main .content .wraper .module a {
+	font-weight: bold;
+	width: 120px;
+	text-align: justify;
+	text-align-last: justify;
+	border-left: 5px solid #6a6;
+}
+
+.theBody .main .content .wraper .function {
+	display: inline-table;
+	width: 75%;
+}
+
+.theBody .main .content .wraper a:HOVER {
+	text-decoration: underline;
+	color: #F2750C;
+}
+
+.theBody .main .content .wraper a:VISITED {
+	color: #33a;
+}
+
+#tp-weather-widget {
+	height: 30px;
+}
+.hideDiv{margin:0;padding:0 50px;}
+.hideDiv a{color:#000;font-size:24px;text-decoration:none;}
+.hiden{display:none;}
+</style>
+</head>
+<body>
+
+	<div class="header">
+		<div class="_title">
+			<a href="">自助服务平台-首页</a>
+			<div class="nav">
+				<div id="tp-weather-widget"></div>
+				<div id="tips" class="tips">欢迎使用</div>
+			</div>
+		</div>
+	</div>
+	<div class="theBody">
+		<div class="main">
+			<div class="htmltitle"></div>
+			<div class="content">
+				<div class="wraper">
+					<div class="module">
+						<a href="">自助服务平台</a>
+					</div>
+					<div class="function">
+						<a target="_blank" href="/txl_static.html" onclick='open_Diag(this.href,this.innerHTML);return false;'>企业通讯录-tlyd</a>
+						<a href='/share/software/' onclick='open_Diag(this.href,this.innerHTML);return false;'>常用软件</a>
+						<a href='/share/flash_addon/' onclick='open_Diag(this.href,this.innerHTML);return false;'>Flash插件</a>
+						<a href='/share/ie_set/' onclick='open_Diag(this.href,this.innerHTML);return false;'>IE设置脚本</a>
+						<a href='/share/bat/' onclick='open_Diag(this.href,this.innerHTML);return false;'>常用设置脚本</a>
+						<a href='/share' onclick='open_Diag(this.href,this.innerHTML);return false;'>共享文件</a>
+						<a href='javascript:openOffice();'>Office安装包</a>
+					</div>
+				</div>
+				<div class="wraper">
+					<div class="module">
+						<a href="//10.65.187.202">综合导航</a>
+					</div>
+					<div class="function">
+						<a href="//10.65.187.202/ESweb">Excel服务器登录</a><a href="//10.65.187.202/esserver">Excel服务器找回密码</a><a href='#' onmouseover="c$.mmove();" onmouseout="c$.mout();">终端故障报修</a>
+					</div>
+				</div>
+				<div class="wraper">
+					<div class="module">
+						<a href="/"></a>
+					</div>
+					<div class="function">
+						<a href="/"></a>
+					</div>
+				</div>
+			</div>
+			<div id="office_con" class='office_con hideDiv' style="display: none;">
+			<a href="/share/software/Office%202007_Setup.exe">Office 2007</a><br>
+			<a href="/share/software/cn_office_professional_plus_2010_with_sp1_x86_x64_732114.iso">Office 2010 专业版</a><br>
+			<a href="/share/software/cn_office_professional_plus_2013_with_sp1_x86_and_x64_dvd_3921921.zip">Office 2013 专业版</a><br>
+			<a href="/share/software/cn_office_professional_plus_2016_x86_x64_dvd_6969182.iso">Office 2016 专业版</a><br><br>
+			<a href="/share/software/Office_Visio_Pro_2007.zip">Office visio 2007</a><br>
+			<a href="/share/software/cn_visio_professional_2016_x86_x64_dvd_6970929.iso">Office visio 2016</a><br>
+			<a href="/share/software/KMSpico_v10.1.6Portable.7z">2010、2013、2016激活工具</a><br><br>
+			<!-- office_con 结束-->
+		</div>
+		</div>
+	</div>
+	<script>
+		(function(T, h, i, n, k, P, a, g, e) {
+			g = function() {
+				P = h.createElement(i);
+				a = h.getElementsByTagName(i)[0];
+				P.src = k;
+				P.charset = "utf-8";
+				P.async = 1;
+				a.parentNode.insertBefore(P, a)
+			};
+			T["ThinkPageWeatherWidgetObject"] = n;
+			T[n] || (T[n] = function() {
+				(T[n].q = T[n].q || []).push(arguments)
+			});
+			T[n].l = +new Date();
+			if (T.attachEvent) {
+				T.attachEvent("onload", g)
+			} else {
+				T.addEventListener("load", g, false)
+			}
+		}(window, document, "script", "tpwidget",
+				"//widget.thinkpage.cn/widget/chameleon.js"))
+	</script>
+	<script>
+		if (typeof tpwidget != 'undefined') {
+			tpwidget("init", {
+				"flavor" : "slim",
+				"location" : "WZ809BF6B5HR",
+				"geolocation" : "disabled",
+				"language" : "zh-chs",
+				"unit" : "c",
+				"theme" : "chameleon",
+				"container" : "tp-weather-widget",
+				"bubble" : "enabled",
+				"alarmType" : "badge",
+				"color" : "#FFFFFF",
+				"uid" : "UF536FF120",
+				"hash" : "64a40762e09810139088de8445ef7b65"
+			});
+			tpwidget("show");
+		}
+	</script>
+
+</body>
+<script>
+	var o$ = function(id) {
+		return document.getElementById(id);
+	};
+	var c$ = {};
+	document.write("<img id=\"qrcode\" style=\"position:absolute;display:none\" src=\"\\images\\qrcode.jpg?1\"></img>");
+	c$.mmove = function() {
+		// alert(typeof(s));
+		var evt = event || window.event;
+		var x = evt.clientX - o$("qrcode").width/2;
+		var y = evt.clientY + 30;
+		o$("qrcode").style.left = x + "px";
+		o$("qrcode").style.top = y + "px";
+		o$("qrcode").style.display = "";
+	};
+	c$.mout = function() {
+		o$("qrcode").style.display = "none";
+	};
+	clockon();
+	function openOffice(){
+		var diag= new Dialog();
+		diag.Title="Office下载";
+		diag.Height=300;
+		diag.Width=600;
+		diag.ShowMessageRow = true;
+		diag.MessageTitle = "Office 办公软件下载";
+		diag.Message = "请根据自己的喜好选择适合的版本。";
+		diag.InvokeElementId="office_con";
+		diag.OKEvent = function(){diag.close();};
+		diag.show();
+	}
+	function open_Diag(_url,_title){
+		var diag= new Dialog();
+		diag.Title=_title;
+		diag.Height=550;
+		diag.Width=document.body.offsetWidth-100;
+		diag.URL=_url;
+		diag.OKEvent = function(){diag.close();};
+		diag.show();
+		
+	}
+	
+	function clockon() {
+		var now = new Date();
+		var year = now.getFullYear(); //getFullYear getYear
+		var month = now.getMonth();
+		var date = now.getDate();
+		var day = now.getDay();
+		var hour = now.getHours();
+		var minu = now.getMinutes();
+		var sec = now.getSeconds();
+		var week;
+		month = month + 1;
+		if (month < 10)
+			month = "0" + month;
+		if (date < 10)
+			date = "0" + date;
+		if (hour < 10)
+			hour = "0" + hour;
+		if (minu < 10)
+			minu = "0" + minu;
+		if (sec < 10)
+			sec = "0" + sec;
+		var arr_week = new Array("星期日", "星期一", "星期二", "星期三", "星期四", "星期五",
+				"星期六");
+		week = arr_week[day];
+		var time = "";
+		time = year + "年" + month + "月" + date + "日" + " " + hour + ":" + minu
+				+ ":" + sec + " " + week;
+
+		document.getElementById("tips").innerHTML = time;
+
+		var timer = setTimeout("clockon()", 500);
+	}
+	//document.getElementById("tips").innerHTML=new Date();
+</script>
+</html>

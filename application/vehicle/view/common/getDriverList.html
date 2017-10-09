@@ -1,0 +1,40 @@
+{include file="vehicle@common/c" /}
+<title>选择司机车辆信息</title>
+<style>
+#driver-btn {
+	text-align: center;
+}
+
+#driver-btn .btn {
+	text-align: left;
+}
+
+#driver-btn button {
+	width: 300px;
+	margin: 5px;
+}
+</style>
+
+<div id="driver-btn"></div>
+<input id='a1' type="text" style="display: none;" />
+<input id='a2' type="text" style="display: none;" />
+<script>
+	var json = {$json};
+	$(function($){
+		if(json.length<1){
+			$("#driver-btn").append("<h2>请先录入司机车辆信息</h2><div>在左侧菜单选择<b>司机车辆管理</b></div>");
+		}else{
+			for(var i in json){
+				var btn = '<button class="btn btn-default" id="'+i+'" onclick="confirm(this)">'+json[i]['label']+'</button>';
+				$("#driver-btn").append(btn);
+				btn = null;
+			}
+		}
+	});
+	
+	function confirm(obj) {
+		document.getElementById('a1').value = obj.id;
+		document.getElementById('a2').value = json[obj.id]['value'];
+		parentDialog.okButton.onclick();
+	}
+</script>

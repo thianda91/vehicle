@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+{include file="vehicle@common/c" /}
+<title></title>
+
+<style>
+.page {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	overflow: hidden;
+}
+
+.header {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 50px;
+	line-height: 50px;
+	background-color: #088bff;
+	color: #eee;
+	line-height: 30px;
+}
+
+.header a {
+	color: #eee;
+	text-decoration: none;
+}
+
+.header .nav {
+	position: absolute;
+	left: 20px;
+	bottom: 0;
+}
+
+.header .title {
+	position: absolute;
+	left: 200px;
+	font-size: 28px;
+	line-height: 50px;
+}
+
+.header .tools {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	margin: 0 30px;
+}
+
+.header .tools ul, .footer ul {
+	margin: 0;
+	padding: 0;
+}
+
+.header .tools ul li, .footer ul li {
+	border: medium none;
+	list-style: none;
+	display: inline;
+	padding: 2px 10px;
+}
+.header .tools ul li .readme{
+color: yellow;
+font-weight: bold;
+}
+
+.menuleft {
+	position: absolute;
+	top: 50px;
+	bottom: 20px; left：0;
+	width: 150px;
+	border: 0;
+	background-color: #e4e4e4;
+}
+
+.menuleft .leftmenu {
+	padding: 15px;
+}
+
+.menuleft .leftmenu ul {
+	background-color: #fff;
+}
+
+.menuleft .leftmenu ul li {
+	list-style: none;
+}
+
+.menuleft ul a {
+	border-bottom: 1px solid #d4d4d4;
+	color: #2d00b1;
+}
+
+.main {
+	border: 0;
+	position: absolute;
+	top: 50px;
+	bottom: 20px;
+	left: 150px;
+	right: 0;
+	padding: 0 10px;
+	overflow: auto;
+}
+
+.main .content {
+	overflow: hidden;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 20px;
+	line-height: 20px;
+	width: 100%;
+	background-color: #088bff;
+	color: #eee;
+}
+
+div#layoutObj {
+	position: relative;
+}
+
+.dhtmlx_validation_error {
+	color: red; /*此css无效*/
+}
+
+.dhtmlx_message_area {
+	bottom: 10px;
+}
+</style>
+<script>
+	var resizePage;
+	$(function() {
+		resizePage = function() {
+			$(".menuleft").css("height", _htmlHeight - 70 + "px");
+			$(".main").css("height", _htmlHeight - 70 + "px");
+			$(".main").css("width", _htmlWidth - 150 + "px");
+		};
+		var _resize_page = function() {
+			_htmlHeight = document.documentElement ? document.documentElement.clientHeight
+					: document.body.clientHeight;
+			if (_htmlHeight < 400) {
+				_htmlHeight = 400;
+				//alert("窗口过小，或显示不全，建议调整窗口大小。");
+			}
+			_htmlWidth = document.documentElement ? document.documentElement.clientWidth
+					: document.body.clientWidth;
+			resizePage();
+		};
+		$(window).bind('resize', _resize_page);
+		var mypath = "{$Request.path}";
+		mypath = mypath.substr(mypath.lastIndexOf("/") + 1, mypath.length);
+		var cur_page = $(".leftmenu ul li a[href='" + mypath + ".html']");
+		//document.title = cur_page.text() + "-EAM系统";
+		cur_page.parent().addClass("active");
+		$(".leftmenu ul li[class='disabled']").on("click", function() {
+			return false;
+		});
+		resizePage();
+	});
+</script>
+</head>
+<body>
+	<div class="page" id="winVP">
+		<div class="header">
+			<div class="nav">
+				<a href="/">返回首页</a>
+			</div>
+			<div class="title">tlydgs公务车管理系统</div>
+			<div class="tools">
+				<ul>
+					<li><button class="btn btn-link readme" data-href="__ROOT__/common/readme.html">公务车申请流程</button></li>
+					<li>您好。<a href="">{$Think.session.user['name']}</a></li>
+					<li style="color: #98c0ee;">|</li>
+					<li><a href="javascript:dhtmlx.alert({title: '关于本系统',text: '当前版本：{$version|default=null}<br>Xianda感谢您的关注！<br>有问题可点击下方的意见反馈'});">关于</a></li>
+					<li style="color: #98c0ee;">|</li>
+					<li><a href="__ROOT__/index/loginout">退出</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="menuleft">
+			<div class="leftmenu">{block name="leftmenu"} 左侧目录 {/block}</div>
+		</div>
+		<div class="main">
+			<div class="content">{block name="main"}主内容{/block}</div>
+		</div>
+		<div class="footer">
+			<ul>
+				<li>版本：{$version|default="null"}</li>
+				<li style="color: #98c0ee;">|</li>
+				<li>版权：tlydgs XDa</li>
+				<li style="color: #98c0ee;">|</li>
+				<li>联系方式：thianda91@outlook.com</li>
+				<li style="color: #98c0ee;">|</li>
+				<li><a style="color: #000;" href="">bug反馈/意见反馈</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="bugReportDiv" style="display: none; padding: 30px;">
+		<div style="color: blue;">
+			<p>使用过程中有任何疑问、意见和建议，可在此提交。</p>
+			<p>请详细描述您遇见的情况，或详细的表达您的想法，以方便Xianda进行分析处理。</p>
+		</div>
+		<div>
+			<form action="bugReport" method="post">
+				<div id="bugForm"></div>
+			</form>
+		</div>
+
+	</div>
+</body>
+<script>
+	//var bugForm ;
+	var dhxWins = new dhtmlXWindows();
+	$(function() {
+		dhxWins.attachViewportTo("winVP");
+		//拯救 dhtmlx Layout组件导致的body over-flow:hidden 失效的问题
+		$("body").removeClass("dhxwins_vp_auto");
+		$(".footer ul a").click(function() {
+			dhxWins.createWindow({
+				id : "bugReport",
+				width : 600,
+				height : 500,
+				text : "<span style='color: red;'>bug提交/意见反馈</span>",
+				center : true,
+			});
+			//$("#bugReportDiv").load("bugReport.html");
+			dhxWins.window("bugReport").appendObject("bugReportDiv");
+			bugReportInit();
+			//dhxWins.window("bugReport").attachURL("bugReport.html");
+
+			return false;
+		});
+		$(".readme").click(function(){
+			dhxWins.createWindow({
+				id : "readme",
+				width : 600,
+				height : 400,
+				text : "公务车申请流程",
+				center : true,
+			});
+			dhxWins.window("readme").attachURL($(".readme").attr("data-href"));
+			return false;
+		});
+	});
+	function bugReportInit() {
+		var formStructure = [ {
+			type : "settings",
+			labelWidth : 80,
+			inputWidth : "460",
+			position : "label-top"
+		}, {
+			type : "block",
+			inputWidth : "auto",
+			blockOffset : 0,
+			offsetTop : 0,
+			list : [ {
+				"type" : "hidden",
+				"name" : "reporter",
+				"label" : "反馈人",
+				value : "{$Think.session.user['name']}",
+				readonly : true
+			}, {
+				"type" : "input",
+				"name" : "title",
+				"label" : "BUG简述",
+				validate : "NotEmpty",
+				maxLength : 50
+			}, {
+				"type" : "input",
+				"name" : "content",
+				"label" : "详细信息",
+				rows : 8,
+				validate : "NotEmpty",
+				maxLength : 500
+			}, {
+				"type" : "hidden",
+				"name" : "url",
+				"label" : "当前URL"
+			}, {
+				"type" : "hidden",
+				"name" : "bcreatetime",
+				"label" : "提交时间"
+			}, ]
+		}, {
+			type : "block",
+			inputWidth : "460",
+			blockOffset : "200",
+			offsetTop : 20,
+			list : [ {
+				"type" : "button",
+				"name" : "b_submit",
+				"value" : "提交"
+			}, ]
+		} ];
+		var bugForm = new dhtmlXForm('bugForm', formStructure);
+		bugForm.attachEvent("onButtonClick",function(id) {
+			if (id == "b_submit") {
+				if (this.validate()) {
+					this.setItemValue("bcreatetime",getNowFormatDate());
+					this.setItemValue("url", location.href);
+					//$("#bugReportDiv form").submit();
+					this.send("bugreport","post",function(data) {
+						if (data.xmlDoc.responseText == 1) {
+							dhtmlx.alert({text : "反馈成功。谢谢您的配合"});
+							dhxWins.window("bugReport").close();
+						} else {
+							window.bugResponseText = data.xmlDoc.responseText;
+							window.bugResponse = data;
+							dhtmlx.alert({text : "反馈未成功，请联系管理员解决。<br>检查console中的bugResponseText和bugResponse变量。"});
+						}
+					});
+				}
+			}
+		})
+	}
+	function getNowFormatDate() {
+		var day = new Date();
+		var Year = 0;
+		var Month = 0;
+		var Day = 0;
+		var CurrentDate = "";
+		//初始化时间
+		//Year= day.getYear();//有火狐下2008年显示108的bug
+		Year = day.getFullYear();//ie火狐下都可以
+		Month = day.getMonth() + 1;
+		Day = day.getDate();
+		Hour = day.getHours();
+		Minute = day.getMinutes();
+		Second = day.getSeconds();
+		CurrentDate += Year + "-" + check(Month) + "-" + check(Day) + " "
+				+ check(Hour) + ":" + check(Minute) + ":" + check(Second);
+		function check(a) {
+			return a < 10 ? "0" + a : a;
+		}
+		return CurrentDate;
+	}
+</script>
+</html>
+
+

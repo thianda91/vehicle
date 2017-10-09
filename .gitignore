@@ -1,0 +1,7 @@
+.idea
+composer.lock
+*.log
+.buildpath
+.project
+.settings
+/thinkphp

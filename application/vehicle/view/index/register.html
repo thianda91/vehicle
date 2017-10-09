@@ -1,0 +1,145 @@
+{extend name="vehicle@common/base" /} {block name="leftmenu"}
+<ul class="nav nav-stacked nav-pills">
+<li><a href="">用户注册</a></li>
+<li><a href="default.html">登陆</a></li>
+</ul>
+ {/block}{block name="main"}
+<style>
+.submitDiv button {
+	margin-left: 30px;
+}
+
+.th {
+	width: 130px;
+}
+
+.value {
+	width: 370px;
+}
+</style>
+<div class="htmltitle">
+	<h2>用户注册<small>已有账户？<a class="btn btn-default btn-lg" href="default.html">点此登陆</a>。（新注册密码默认为123456，登陆后修改。）</small></h2>
+	<p>{$msg1|default=""}</p>
+</div>
+
+<div>
+	<div class="table-responsive">
+		<form id="registerForm" style="float: left;" action="" method="post">
+			<table class="table table-hover table-bordered " id='infoTable'>
+				<tbody>
+					<tr>
+						<td class="th">登录名：</td>
+						<td class="value"><input class="form-control" type="text"
+							id="loginName" name="loginName" /></td>
+						<td id="msg1">通常为姓名全拼，方便记忆</td>
+					</tr>
+					<tr>
+						<td class="th">姓名：</td>
+						<td class="value"><input class="form-control" type="text"
+							id="name" name="name" /></td>
+						<td id="msg2">姓名汉字</td>
+					</tr>
+					<tr>
+						<td class="th">V网电话：</td>
+						<td class="value"><input class="form-control" type="text"
+							id="phone" name="phone" /></td>
+						<td>6位数字</td>
+					</tr>
+					<tr>
+						<td class="th">中心：</td>
+						<td class="value"><input class="form-control" type="text"
+							id="dep" name="dep" /></td>
+						<td>如：客户响应中心，无中心此格留空，如财务部</td>
+					</tr>
+					<tr>
+						<td class="th">部门：</td>
+						<td class="value"><input class="form-control" type="text"
+							id="dep2" name="dep2" /></td>
+						<td>如：网络部</td>
+					</tr>
+					<tr>
+						<td class="th">单位：</td>
+						<td class="value"><select id="office" class="form-control"
+							name="office">
+								<!-- <option value="tlyd市公司" selected="selected">tlyd市公司</option>
+								<option value="tlyd银州区分公司">tlyd银州区分公司</option>
+								<option value="tlyd铁岭县分公司">tlyd铁岭县分公司</option>
+								<option value="tlyd开原分公司">tlyd开原分公司</option>
+								<option value="tlyd清河分公司">tlyd清河分公司</option>
+								<option value="tlyd西丰分公司">tlyd西丰分公司</option>
+								<option value="tlyd昌图分公司">tlyd昌图分公司</option>
+								<option value="tlyd调兵山分公司">tlyd调兵山分公司</option> -->
+						</select></td>
+						<td>请选择</td>
+					</tr>
+					<tr>
+						<td class="th">角色：</td>
+						<td class="value"><input class="form-control" type="text"
+							value="用户" readonly /></td>
+						<td>如需修改请联系管理员后台修改。</td>
+					<tr class="submitDiv">
+						<td>&nbsp;</td>
+						<td class="value"><button class="btn btn-primary"
+								type="submit">注册</button>
+							<button class="btn btn-warning" type="reset">取消</button></td>
+					</tr>
+
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>
+<script>
+	$("#loginName").on("blur",function(){
+		var loginName = $("#loginName").val();
+		if( loginName.length >0 ){
+			$.post("",{loginName: loginName, _method: "PUT"},function(data){
+				var color = ['red','blue'];
+				if(data['code']){
+					$("#loginName").parent().parent().removeClass('danger');
+				}else{
+					$("#loginName").parent().parent().addClass('danger');
+					$("#loginName").select();
+				}
+				$("#msg1").html("<span style='color: "+color[data['code']]+";'>"+data['msg']+"</span>");
+			});
+		}else{
+			$("#loginName").parent().parent().addClass('danger');
+			$("#loginName").focus();
+			$("#msg1").html("<span style='color: red;'>不能为空。</span>");
+		}
+	});
+	$("#registerForm").submit(function(){
+		if(!check()){
+			return false;
+		}
+	});
+	function check(){
+		var loginName = $("#loginName").val();
+		var name = $("#name").val();
+		if(loginName.length == 0){
+			$("#msg1").html("<span style='color: red;'>不能为空。</span>");
+			return false;
+		}else{
+			$("#msg1").html("<span style='color: blue;'>ok</span>");
+		}
+		if(name.length == 0){
+			$("#msg2").html("<span style='color: red;'>不能为空。</span>");
+			$("#name").parent().parent().addClass('danger');
+			return false;
+		}else{
+			$("#msg2").html("<span style='color: blue;'>ok</span>");
+			$("#name").parent().parent().removeClass('danger');
+		}
+		return true;
+	}
+	function addOption(selectName,value,text){
+		$("#"+selectName).append('<option value="'+value+'">'+text+'</option>');
+	}
+	var data = {$office_names};
+	for(var i in data){
+		addOption("office",data[i],data[i]);
+	}
+	$("#loginName").focus();
+</script>
+{/block}

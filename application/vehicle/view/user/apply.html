@@ -1,0 +1,178 @@
+{extend name="vehicle@common/base" /} {block name="leftmenu"}{include
+file="common/leftMenu" /} {/block}{block name="main"}
+<link rel="stylesheet"
+	href="__PUBLIC__/static/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+<script
+	src="__PUBLIC__/static/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script
+	src="__PUBLIC__/static/bootstrap-datetimepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="__PUBLIC__/static/zDialog/zDialog.js"></script>
+<script src="__PUBLIC__/static/zDialog/zDrag.js"></script>
+<style>
+.table>tbody>tr>td {
+	margin: auto 0;
+	vertical-align: middle;
+	border: 1px solid #ddd;
+}
+
+.submitDiv button {
+	margin: 0 50px;
+}
+</style>
+
+<div class="htmltitle">
+	<h2>用车申请</h2>
+</div>
+<div>
+	<form id="formApp" style="width: 800px;" action="apply_" method="post"
+		onreset="document.getElementById('driverInfo').innerHTML='';">
+		<table class="table table-hover">
+			<tbody>
+				<tr>
+					<td>申请人</td>
+					<td id="userName">{$cuser.name}</td>
+					<td>分类</td>
+					<td><select class="form-control" id="toType" name="toType"><option
+								value='0' selected="selected">非节假日市内用车</option>
+							<option value="1">非节假日出市用车</option>
+							<option value="2">节假日用车</option></select></td>
+				</tr>
+				<tr>
+					<td>用车部门全称</td>
+					<td id="depName">{$cuser.office.$cuser.dep2.$cuser.dep}</td>
+
+					<td>用车人数</td>
+					<td><select class="form-control" id="useNum" name="useNum"><option
+								value='1' selected="selected">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">其他</option></select></td>
+				</tr>
+				<tr>
+					<td>出发点</td>
+					<td><select class="form-control" id="beginPoint"
+						name="beginPoint"> {foreach name="beginPoint" item="b"
+							key="k"} {if $k==0}
+							<option value="{$b}" selected="selected">{$b}</option> {else /}
+							<option value="{$b}">{$b}</option> {/if} {/foreach}
+					</select><span class="help-block">具体信息可填在事由里。</span></td>
+					<td>目的地</td>
+					<td><select class="form-control" id="destination"
+						name="destination"> {foreach name="destination" item="d"
+							key="k"} {if $k==0}
+							<option value="{$d}" selected="selected">{$d}</option> {else /}
+							<option value="{$d}">{$d}</option> {/if} {/foreach}
+					</select><span class="help-block">具体地点可填在事由里。</span></td>
+				</tr>
+				<tr>
+					<td>拟定出发时间</td>
+					<td class="date form_datetime" data-date=""
+						data-link-field="beginTime">
+						<!--  <div class="input-append date form_datetime" data-link-field="beginTime"> -->
+						<input class="form-control" type="text" id="beginTime"
+						name="beginTime" readonly /> 
+								<!-- <span class="add-on"><i class="icon-th"></i></span>
+						</div> -->
+					</td>
+					<td>拟定返回时间</td>
+					<td class="date form_datetime" data-date=""
+						data-link-field="returnTime">
+						<input class="form-control" type="text" id="returnTime"
+						 name="returnTime" readonly /></td>
+				</tr>
+				<tr>
+					<td>事由</td>
+					<td colspan=3><textarea class="form-control" id="reson"
+							name="reson" rows=3 style="color: blue;" maxlength="50"></textarea></td>
+				</tr>
+
+				<tr>
+					<td><a class="btn btn-default"
+						onclick="openSelectWins('getDriverList.html','选择司机车辆信息')">司机预选</a></td>
+					<td colspan="3" id="driverInfo"></td>
+				</tr>
+				<tr class="submitDiv">
+					<td></td>
+					<td colspan=3><button type="button" class="btn btn-success"
+							onclick="formSubmit()">提交</button>
+						<button type="reset" class="btn btn-default">重置</button> <a
+						class="btn btn-warning" onclick="ceshi()">测试</a></td>
+				</tr>
+			</tbody>
+		</table>
+	<input type="hidden" id="driverPre" name="driverPre">
+	</form>
+</div>
+<script>
+	function ceshi() {
+		//$("#toType option[value='2']").attr("selected","selected").siblings().removeAttr("selected");
+		//$("#useNum option[value='10']").attr("selected","selected").siblings().removeAttr("selected");
+		//$("#beginPoint option[value='其他']").attr("selected","selected").siblings().removeAttr("selected");
+		//$("#destination option[value='其他']").attr("selected","selected").siblings().removeAttr("selected");
+		$("#toType").val(0);
+		$("#useNum").val(9);
+		$("#beginPoint").val("其他");
+		$("#destination").val("其他");
+		$("#beginTime").val(getNowFormatDate());
+		$("#returnTime").val(getNowFormatDate());
+		$("#reson").val("测试表单，这里是reson。{$cuser.name}"+getNowFormatDate());
+		//return false;
+	}
+	function formSubmit() { //表单验证
+		var table = [ "toType", "useNum", "beginPoint", "destination",
+				"beginTime", "returnTime", "reson" ];
+		var o;
+		for (var t = 0; t < table.length; t++) {
+			o = document.getElementById(table[t]);
+			if (o.value == '') {
+				Dialog.alert("请填写完整再提交");
+				return false;
+			} else {
+			}
+		}
+		$("#formApp").submit();
+	}
+	//弹出选择司机车辆窗口
+	function openSelectWins(url, title) {
+		var diag = new Dialog();
+		diag.Width = 750;
+		diag.Height = _htmlHeight * 0.6;
+		diag.Title = title != undefined ? title : "";
+		diag.URL = url;
+		diag.OKEvent = function() {
+			var driverId = diag.innerFrame.contentWindow.document
+					.getElementById('a1').value;
+			var driverInfo = diag.innerFrame.contentWindow.document
+					.getElementById('a2').value;
+			okEnv(driverId, driverInfo);
+		};
+		diag.show();
+		function okEnv(driverId, driverInfo) {
+			diag.close();
+			if (driverId != '') {
+				Dialog.confirm("确定选择\"" + driverInfo + "\"？", function() {
+					$("#driverInfo").text(driverInfo);
+					$("#driverPre").val(driverInfo);
+				});
+			}
+		}
+	}
+	$(function() {
+		$('.form_datetime').datetimepicker({
+			format : 'yyyy-mm-dd HH:ii',
+			language : 'zh-CN',
+			todayBtn : 1,
+			autoclose : 1,
+			todayHighlight : 1,
+			showMeridian : 1
+		});
+	});
+</script>
+
+{/block}

@@ -1,0 +1,49 @@
+{extend name="vehicle@common/base" /} {block name="leftmenu"}{include
+file="common/leftMenu" /} {/block}{block name="main"}
+<style>
+.data-tr {
+	cursor: pointer;
+}
+</style>
+<div class="htmltitle">
+	<h2>待审批的用车条目</h2>
+</div>
+<div>
+	<div class="table-responsive">
+		<form method="post" action="detail.html">
+			<input id='ddd' name='ddd' type="text" style='display: none;'>
+			<table class="table table-hover table-bordered" id='viewTable'>
+				<tbody>
+					<tr>
+						<th class="td-id">编号</th>
+						<th class="td-status">状态</th>
+						<th class="td-des">目的地</th>
+						<th class="td-reson">事由</th>
+						<th class="td-user">用车人</th>
+						<th class="td-time">申请时间</th>
+					</tr>
+					{volist name="list" id="data"}
+					<tr id="{$i}" class='data-tr'>
+						<td class="td-id">{$data.id}</td>
+						<td class="td-status">{$data.statusText}</td>
+						<td class="td-des">{$data.destination}</td>
+						<td class="td-reson">{$data.reson}</td>
+						<td class="td-user">{$data.userName}</td>
+						<td class="td-time">{$data.creTime}</td>
+					</tr>
+					{/volist}
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div>
+<script>
+	$("#viewTable tr.data-tr").click(function() {
+		$("#ddd").val($(this).attr('id') - 1);
+		document.forms[0].submit();
+		//location.href='detail/id/'+$(this).attr('id')+'.html';
+	});
+</script>
+
+
+{/block}
